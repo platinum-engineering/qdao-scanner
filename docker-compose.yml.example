@@ -1,0 +1,51 @@
+version: '3.1'
+
+services:
+
+  application:
+    build:
+      context: ./
+    ports:
+      - 8000:8000
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: user
+      RABBITMQ_PASS: password
+      POSTGRES_HOST: postgresql
+      POSTGRES_DB: database
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      USDQ_NETWORK: MAINNET
+      USDQ_CONTRACT_ADDRESS: "0x4954db6391f4feb5468b6b943d4935353596aec9"
+      KRWQ_NETWORK: MAINNET
+      KRWQ_CONTRACT_ADDRESS: "0x3c6cfbdaf0a04fc257b185bf98934a12124fe8d0"
+      INFURA_PROJECT_ID: "0fa2808f487b488494c923b39f1a85d8"
+      INFURA_PROJECT_SECRET: "5ababd566f754b8b95a148ef57017e22"
+    depends_on:
+      - rabbitmq
+      - postgresql
+    links:
+      - rabbitmq
+      - postgresql
+
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    hostname: queue
+    ports:
+      - 15672:15672
+      - 5672:5672
+    environment:
+      RABBITMQ_ERLANG_COOKIE: SKJkdkjhkJSKDFHUIDKSJVnvknjd89s39g32(*-dfjhg)
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+
+  postgresql:
+    container_name: platform-delivery-postgresql
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: database
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+    - 5433:5432

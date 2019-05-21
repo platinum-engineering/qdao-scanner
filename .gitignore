@@ -1,0 +1,62 @@
+# Docker #
+##########
+
+docker-compose.yml
+
+# Application config #
+######################
+
+/application.yml
+
+# Spring Application #
+######################
+
+logs/
+out/
+bin/
+build/
+classes/
+apps/
+dist/
+# Gradle #
+##########
+
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+
+# Idea
+######
+*.iml
+*.iws
+*.ipr
+*.ids
+.idea/
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+._*/
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# NodeJS #
+##########
+node_modules
+package-lock.json
+*.spec.ts
+.metadata

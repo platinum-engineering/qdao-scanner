@@ -1,0 +1,47 @@
+ethereum:
+  contracts:
+    usdq:
+      network: ${USDQ_NETWORK:MAINNET}
+      address: ${USDQ_CONTRACT_ADDRESS}
+    krwq:
+      network: ${KRWQ_NETWORK:MAINNET}
+      address: ${KRWQ_CONTRACT_ADDRESS}
+  infura:
+    project-id: ${INFURA_PROJECT_ID}
+    project-secret: ${INFURA_PROJECT_SECRET}
+
+server:
+  port: ${APP_PORT:8000}
+
+spring:
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER}
+    password: ${RABBITMQ_PASS}
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT:5432}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    validation-query: select 1
+    test-on-borrow: true
+    remove-abandoned: true
+    continueOnError: true
+    initialize: false
+    initialSize: 0
+    timeBetweenEvictionRunsMillis: 5000
+    minEvictableIdleTimeMillis: 5000
+    minIdle: 0
+  jpa:
+    show-sql: false
+    generate-ddl: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        hbm2ddl:
+          auto: none
+        temp:
+          use_jdbc_metadata_defaults: false

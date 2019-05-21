@@ -1,0 +1,117 @@
+ext {
+//    Backend dependency versions
+    springBootVersion = '2.1.4.RELEASE'
+    springSecurityVersion = '5.1.1.RELEASE'
+    postgresqlVersion = '42.2.5'
+    flywayVersion = '5.2.1'
+    gsonVersion = '2.8.5'
+    jjwtVersion = '0.10.5'
+    jacsonAnnotationVersion = '2.9.8'
+    exchangeVersion = '4.3.17'
+    web3jVersion = '4.2.0'
+
+    jUnitVersion = '4.12'
+}
+
+group 'io.qdao'
+version '1.0'
+
+apply plugin: "java"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+configurations {
+//    all*.exclude group: 'ch.qos.logback'
+}
+
+dependencies {
+    compile "com.google.code.gson:gson:${gsonVersion}"
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3' // TODO: Remove this dependence
+    compile("com.fasterxml.jackson.core:jackson-annotations:${jacsonAnnotationVersion}")
+
+    compile("org.springframework.boot:spring-boot-starter:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-amqp:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-websocket:${springBootVersion}")
+
+    compile("org.springframework.security:spring-security-web:${springSecurityVersion}")
+    compile("org.springframework.security:spring-security-core:${springSecurityVersion}")
+    compile("org.springframework.security:spring-security-config:${springSecurityVersion}")
+
+    compile "org.postgresql:postgresql:${postgresqlVersion}"
+    compile "org.flywaydb:flyway-core:${flywayVersion}"
+
+    compile "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+    compile "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
+    compile "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
+
+    compile "io.springfox:springfox-swagger2:2.9.2"
+    compile "io.springfox:springfox-swagger-ui:2.9.2"
+
+    // Exchanges TODO: change to web-socket. Remove this dependencies
+    // TODO: Move to sub module (Or native library)
+    compile("org.knowm.xchange:xchange-core:${exchangeVersion}") {
+        exclude group: 'ch.qos.logback'
+        exclude group: 'org.apache.logging.log4j'
+        exclude group: 'org.slf4j'
+    }
+    compile("org.knowm.xchange:xchange-kraken:${exchangeVersion}") {
+        exclude group: 'ch.qos.logback'
+        exclude group: 'org.apache.logging.log4j'
+        exclude group: 'org.slf4j'
+    }
+    compile("org.knowm.xchange:xchange-coinbase:${exchangeVersion}") {
+        exclude group: 'ch.qos.logback'
+        exclude group: 'org.apache.logging.log4j'
+        exclude group: 'org.slf4j'
+    }
+    compile("org.knowm.xchange:xchange-bitstamp:${exchangeVersion}") {
+        exclude group: 'ch.qos.logback'
+        exclude group: 'org.apache.logging.log4j'
+        exclude group: 'org.slf4j'
+    }
+
+    // Integration with Blockchain
+    // TODO: Move to sub module (Or native library)
+    compile "org.web3j:core:${web3jVersion}"
+    compile "org.web3j:parity:${web3jVersion}"
+    compile "org.web3j:infura:${web3jVersion}"
+    compile "org.web3j:contracts:${web3jVersion}"
+
+    testCompile "junit:junit:${jUnitVersion}"
+    testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testCompile "com.h2database:h2:1.4.199"
+}
+
+task customCopyDeps(type: Copy) {
+    group 'Custom'
+    description 'Copy dependencies.'
+
+    from configurations.runtime
+    from jar
+    into "./dist"
+}
+
+task customCopyJars(type: Copy, dependsOn: 'jar') {
+    group 'Custom'
+    description 'Copy jars.'
+
+    from tasks.jar.archivePath
+    into "./dist"
+}
+
+task dist(type: Copy) {
+    group 'Custom'
+    description 'Copy all dependencies.'
+}
+
+dist.finalizedBy(customCopyDeps)
+dist.finalizedBy(customCopyJars)
